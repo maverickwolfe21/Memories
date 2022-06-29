@@ -13,12 +13,13 @@ const Form = ({ currentId, setCurrentId }) => {
     currentId ? state.posts.find((post) => post._id === currentId) : null
   );
 
+  const user = JSON.parse(localStorage.getItem("profile"));
+
   useEffect(() => {
     if (post) setPostData(post);
   }, [post]);
 
   const [postData, setPostData] = useState({
-    creator: "",
     title: "",
     message: "",
     tags: "",
@@ -29,22 +30,31 @@ const Form = ({ currentId, setCurrentId }) => {
     e.preventDefault();
 
     if (currentId) {
-      dispatch(updatePost(currentId, postData));
+      dispatch(updatePost(currentId, { ...postData, name: user?.name }));
     } else {
-      dispatch(createPost(postData));
+      dispatch(createPost({ ...postData, name: user?.name }));
     }
     clear();
   };
   const clear = () => {
     setCurrentId(null);
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
       selectedFile: "",
     });
   };
+
+  if (!user?.name) {
+    return (
+      <Paper>
+        <Typography variant="h6" align="center">
+          Please sign in to create and interact with memories.
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
     <form
@@ -57,15 +67,7 @@ const Form = ({ currentId, setCurrentId }) => {
       }}
     >
       <h2>{currentId ? "Editing Memory" : "Create a Memory"}</h2>
-      <TextField
-        style={{ marginTop: 8 }}
-        name="creator"
-        variant="outlined"
-        label="Creator"
-        fullWidth
-        value={postData.creator}
-        onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
-      />
+
       <TextField
         style={{ marginTop: 8 }}
         name="title"
@@ -132,107 +134,3 @@ const Form = ({ currentId, setCurrentId }) => {
 };
 
 export default Form;
-
-//   const MyPaper = styled("Paper")({});
-//   const MyForm = styled("form")({
-//     padding: 25,
-//     backgroundColor: "white",
-//     boxShadow: " 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%)",
-//   });
-//   const MyDiv = styled("div")({
-// marginTop: "8px",
-// marginBottom: "8px",
-//   });
-//   const MyButton = styled("Button")({
-//     marginLeft: "15px",
-//   });
-//   const MyTextField = styled("TextField")({
-//     marginBottom: 5,
-//   });
-
-//   const handleSubmit = (e) => {
-//     // e.preventDefault();
-//     // dispatch(createPost(postData));
-//   };
-//   const clear = () => {};
-
-//   return (
-//     <MyPaper>
-//       <MyForm>
-//         <Typography variant="h6">Create a Memory</Typography>
-//         <TextField
-//           style={{ marginTop: 8 }}
-//           name="creator"
-//           variant="outlined"
-//           label="Creator"
-//           //fullWidth
-//           value={postData.creator}
-//           onChange={(e) =>
-//             setPostData({ ...postData, creator: e.target.value })
-//           }
-//         />
-//         <TextField
-//           style={{ marginTop: 8 }}
-//           name="title"
-//           variant="outlined"
-//           label="Title"
-//           fullWidth
-//           value={postData.title}
-//           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
-//         />
-//         <TextField
-//           style={{ marginTop: 8 }}
-//           name="message"
-//           variant="outlined"
-//           label="Message"
-//           fullWidth
-//           value={postData.message}
-//           onChange={(e) =>
-//             setPostData({ ...postData, message: e.target.value })
-//           }
-//         />
-//         <TextField
-//           style={{ marginTop: 8 }}
-//           name="tags"
-//           variant="outlined"
-//           label="Tags"
-//           fullWidth
-//           value={postData.tags}
-//           onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
-//         />
-//         <MyDiv>
-//           <FileBase
-//             type="file"
-//             multiple={false}
-//             onDone={({ base64 }) =>
-//               setPostData({ ...postData, selectedFile: base64 })
-//             }
-//           />
-
-//           {/*              setPostData({ ...postData, selectedFile: base64 })
-//            */}
-//         </MyDiv>
-// <Button
-//   style={{ marginBottom: 5 }}
-//   variant="contained"
-//   color="primary"
-//   size="large"
-//   type="submit"
-//   fullWidth
-//   onSubmit={handleSubmit}
-// >
-//   Submit
-// </Button>
-// <Button
-//   variant="contained"
-//   color="error"
-//   size="small"
-//   onClick={clear}
-//   fullWidth
-// >
-//   Clear
-// </Button>
-//       </MyForm>
-//     </MyPaper>
-//   );
-// };

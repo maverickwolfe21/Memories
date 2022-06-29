@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 
 import jwt_decode from "jwt-decode";
-
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { signIn, signUp } from "../../actions/auth";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
@@ -19,14 +20,22 @@ import Input from "./Input";
 import Icon from "./icon";
 
 import "./styles.css";
-import { useNavigate } from "react-router-dom";
+
+const initialState = {
+  email: "",
+  firstName: "",
+  lastName: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const Auth = () => {
   const [isSignup, setIsSignup] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState(initialState);
 
   const handleCallbackResponse = (res) => {
     console.log("Encoded JWT ID token " + res?.credential);
@@ -55,24 +64,37 @@ const Auth = () => {
 
   useEffect(() => {}, [showPassword, isSignup]);
 
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault(); // prevents refresh
+    if (isSignup) {
+      dispatch(signUp(formData, navigate));
+    } else {
+      dispatch(signIn(formData, navigate));
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const switchMode = () => {
     setIsSignup(!isSignup);
   };
-  const googleSuccess = async (res) => {
-    const result = res?.profileObj;
-    const token = res?.tokenId;
 
-    try {
-      dispatch({ type: "AUTH", data: { result, token } });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const googleSuccess = async (res) => {
+  //   const result = res?.profileObj;
+  //   const token = res?.tokenId;
+
+  //   try {
+  //     dispatch({ type: "AUTH", data: { result, token } });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <Container className="container" component="main" maxWidth="xs">

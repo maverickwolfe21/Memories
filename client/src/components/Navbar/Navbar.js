@@ -68,7 +68,7 @@ export const Navbar = () => {
         {user ? (
           <div>
             <Avatar alt={user.name} src={user.picture}>
-              {user.given_name.charAt(0)}
+              {user?.name?.charAt(0)}
             </Avatar>
             <Typography variant="h6">{user.name}</Typography>
             <Button variant="contained" color="error" onClick={handleLogout}>
