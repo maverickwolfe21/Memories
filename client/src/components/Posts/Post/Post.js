@@ -76,7 +76,7 @@ const Post = ({ post, setCurrentId }) => {
         </Typography>
       </Details>
       <CardContent>
-        <Title variant="h5" gutterBottom>
+        <Title variant="body2" gutterBottom>
           {post.message}
         </Title>
       </CardContent>

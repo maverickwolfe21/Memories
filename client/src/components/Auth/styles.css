@@ -1,0 +1,24 @@
+.container {
+}
+.paper {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.avatar {
+  color: white;
+  background-color: red;
+}
+.submit {
+  margin-top: 5px;
+}
+.names {
+  display: flex;
+  flex-direction: row;
+}
+
+.form {
+  padding: 15px;
+}
